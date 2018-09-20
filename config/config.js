@@ -2,11 +2,11 @@ export default {
     singular: true,
     routes: [{
         path: '/',
-        component: './HelloWorld'
+        component: './test'
     }],
     plugins: [
         ['umi-plugin-react', {
-
+            antd: true  
         }]
     ]
 }

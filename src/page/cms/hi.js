@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Card } from 'antd'
 const { Meta } = Card;
-
 export default class Test extends React.Component {
     constructor(props) {
         super(props)

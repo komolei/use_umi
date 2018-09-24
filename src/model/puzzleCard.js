@@ -1,3 +1,11 @@
+import request from '../util/request';
+
+const delay=(millisecond)=>{
+    return new Promise(resolve=>{
+        setTimeout(resolve,millisecond)
+    })
+}
+
 export default {
     namespace: 'puzzleCard',
     state: {
@@ -15,9 +23,20 @@ export default {
         ],
         count: 100
     },
+    effects:{
+        *queryInitCards(_,sagaEffect){
+            const {call,put}=sagaEffect
+            const endPointUrl='/dev/random_joke';
+            const puzzle=yield call(request,endPointUrl);
+            yield put({type:'addNewCard',payload:puzzle})
+            yield call(delay,3000)
+            const puzzle2 = yield call(request, endPointUrl);
+            yield put({ type: 'addNewCard', payload: puzzle2 });
+        }
+    },
     reducers: {
         addNewCard(state, { payload: newCard }) {
-            const newCount = state.count++
+            let newCount = state.count+1;
             const newCardWithId = { ...newCard, id: newCount }
             const nextData = state.data.concat(newCardWithId)
             return {
@@ -25,15 +44,18 @@ export default {
                 count: newCount
             }
         },
-        // removeNewCard = (id) => {
-        //     const index = this.state.cardList.findIndex(v => v.id == id);
-        //     console.log('this.index', index)
-        //     this.setState(prevState => {
-        //         prevState.cardList.splice(index, 1);
-        //         return {
-        //             cardList: prevState.cardList
-        //         }
-        //     })
-        // }
+        removeCard(state,{payload:delCard}){
+            const newData=state.data.filter(item=>item.id!=delCard.id)
+            return {
+                data:newData,
+                count:state.count
+            }
+            // this.setState(prevState => {
+            //     prevState.cardList.splice(index, 1);
+            //     return {
+            //         cardList: prevState.cardList
+            //     }
+            // })
+        },
     }
 }

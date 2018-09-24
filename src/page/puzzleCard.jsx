@@ -18,7 +18,20 @@ const mapDispatchToProps = dispatch => {
                 payload: newCard,
             }
             dispatch(action);
+        },
+        onClickRemove:(card)=>{
+            const action={
+                type:`${namespace}/removeCard`,
+                payload:card
+            }
+            dispatch(action)
+        },
+        onDidMount:()=>{
+            dispatch({
+                type:`${namespace}/queryInitCards`,
+            })
         }
+        
     }
 }
 @connect(mapStateToProps, mapDispatchToProps)
@@ -35,6 +48,7 @@ export default class PuzzleCardsPage extends Component {
                             <div>
                                 <strong>A: {card.punchline}</strong>
                             </div>
+                            <Button onClick={()=>this.props.onClickRemove(card)}>del</Button>
                         </Card>
                     );
                 })
@@ -47,5 +61,8 @@ export default class PuzzleCardsPage extends Component {
             </div>
         </div>
         );
+    }
+    componentDidMount(){
+        this.props.onDidMount()
     }
 }
